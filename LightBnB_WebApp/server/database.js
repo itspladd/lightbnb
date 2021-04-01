@@ -17,16 +17,13 @@ const pool = new Pool({
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  let user;
-  for (const userId in users) {
-    user = users[userId];
-    if (user.email.toLowerCase() === email.toLowerCase()) {
-      break;
-    } else {
-      user = null;
-    }
-  }
-  return Promise.resolve(user);
+  const queryString = `SELECT *
+  FROM users
+  WHERE email = $1`;
+  const values = [email.toLowerCase()]; 
+  return pool.query(queryString, values)
+  .then(res => res.rows[0]) // res.rows is an array, but login functions expect a single object.
+  .catch(err => console.error(err));
 }
 exports.getUserWithEmail = getUserWithEmail;
 
@@ -36,7 +33,13 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function(id) {
-  return Promise.resolve(users[id]);
+  const queryString = `SELECT *
+    FROM users
+    WHERE id = $1`;
+  const values = [id]; 
+  return pool.query(queryString, values)
+  .then(res => res.rows)
+  .catch(err => console.error(err));
 }
 exports.getUserWithId = getUserWithId;
 
