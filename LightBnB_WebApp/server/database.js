@@ -55,7 +55,7 @@ const addUser =  function(user) {
   RETURNING *`;
   const values = [user.name, user.email, user.password];
   return pool.query(queryString, values)
-  .then(res => return res.rows[0])
+  .then(res => res.rows[0])
   .catch(err => console.error(err));
 }
 exports.addUser = addUser;
