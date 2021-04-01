@@ -94,6 +94,7 @@ exports.getAllReservations = getAllReservations;
 const getAllProperties = function(options, limit = 10) {
   // Define a helper function to build the correct query string
   // DOES NOT MODIFY THE INPUT ARRAY OR INPUT STRING
+  /*****************************************/
   const buildWhereQuery = (queryString, paramsArray) => {
     let resultString = '';
     if (paramsArray.length === 0) {
@@ -106,39 +107,43 @@ const getAllProperties = function(options, limit = 10) {
     `;
     return resultString;
   };
+  /******************************************/
+
   let queryString = `SELECT properties.*, avg(revs.rating) as average_rating
     FROM properties
     JOIN property_reviews AS revs ON properties.id = revs.property_id
     `;
   const queryParams = [];
-  /* options can have: {
-    city,
+
+  // Get all of our parameters from the options
+  const { city,
     owner_id,
     minimum_price_per_night,
     maximum_price_per_night,
     minimum_rating
-  } */ 
-  if (options.city) {
+  } = options;
+
+  if (city) {
     queryString += buildWhereQuery('properties.city LIKE', queryParams);
-    queryParams.push(`%${options.city}%`);
+    queryParams.push(`%${city}%`);
   }
-  if (options.owner_id) {
+  if (owner_id) {
     queryString += buildWhereQuery('properties.owner_id =', queryParams);
-    queryParams.push(`${options.owner_id}`);
+    queryParams.push(`${owner_id}`);
   }
-  if (options.minimum_price_per_night) {
+  if (minimum_price_per_night) {
     queryString += buildWhereQuery('properties.cost_per_night/100 >=', queryParams);
-    queryParams.push(`${options.minimum_price_per_night}`);
+    queryParams.push(`${minimum_price_per_night}`);
   }
-  if (options.maximum_price_per_night) {
+  if (maximum_price_per_night) {
     queryString += buildWhereQuery('properties.cost_per_night/100 <=', queryParams);
-    queryParams.push(`${options.maximum_price_per_night}`);
+    queryParams.push(`${maximum_price_per_night}`);
   }
 
   queryString += `GROUP BY properties.id
   `;
-  if (options.minimum_rating) {
-    queryParams.push(`${options.minimum_rating}`);
+  if (minimum_rating) {
+    queryParams.push(`${minimum_rating}`);
     queryString += `HAVING avg(revs.rating) >= $${queryParams.length}
     `;
   }
@@ -147,7 +152,6 @@ const getAllProperties = function(options, limit = 10) {
   queryString += `ORDER BY cost_per_night
   LIMIT $${queryParams.length};
   `;
-
   return pool.query(queryString, queryParams)
   .then(res => res.rows)
   .catch(err => console.error(err));
@@ -161,9 +165,28 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  // Since all the keys have the same names as our database columns, we can just get the keys
+  const propertyKeysArray = Object.keys(property);
+  const numValues = propertyKeysArray.length;
+
+  // Since the values are what we want in our query parameters, we can just get the values
+  const queryParams = Object.values(property);
+
+  // Turn the keys array into a string of column names
+  const propertiesString = propertyKeysArray.join(', ');
+
+  // Make a $1, $2, etc string from the number of values
+  let valuesString = '';
+  for(let i = 1; i <= numValues; i++) {
+    valuesString += i !== 1 ? ', ' : ''; 
+    valuesString += `$${i}`;
+  }
+
+  const queryString = `INSERT INTO properties (${propertiesString})
+  VALUES (${valuesString})
+  RETURNING *`;
+  return pool.query(queryString, queryParams)
+  .then(res => res.rows)
+  .catch(err => console.error(err));
 }
 exports.addProperty = addProperty;
