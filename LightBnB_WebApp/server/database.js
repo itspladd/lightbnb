@@ -20,8 +20,8 @@ const getUserWithEmail = function(email) {
   const queryString = `SELECT *
   FROM users
   WHERE email = $1`;
-  const values = [email.toLowerCase()]; 
-  return pool.query(queryString, values)
+  const queryParams = [email.toLowerCase()]; 
+  return pool.query(queryString, queryParams)
   .then(res => res.rows[0]) // res.rows is an array, but login functions expect a single object.
   .catch(err => console.error(err));
 }
@@ -36,8 +36,8 @@ const getUserWithId = function(id) {
   const queryString = `SELECT *
     FROM users
     WHERE id = $1`;
-  const values = [id]; 
-  return pool.query(queryString, values)
+  const queryParams = [id]; 
+  return pool.query(queryString, queryParams)
   .then(res => res.rows[0])
   .catch(err => console.error(err));
 }
@@ -53,8 +53,8 @@ const addUser =  function(user) {
   const queryString = `INSERT INTO users (name, email, password)
   VALUES ($1, $2, $3)
   RETURNING *`;
-  const values = [user.name, user.email, user.password];
-  return pool.query(queryString, values)
+  const queryParams = [user.name, user.email, user.password];
+  return pool.query(queryString, queryParams)
   .then(res => res.rows[0])
   .catch(err => console.error(err));
 }
@@ -76,8 +76,8 @@ const getAllReservations = function(guest_id, limit = 10) {
   GROUP BY res.id, prop.id
   ORDER BY res.start_date DESC
   LIMIT $2;`
-  const values = [guest_id, limit]
-  return pool.query(queryString, values)
+  const queryParams = [guest_id, limit]
+  return pool.query(queryString, queryParams)
   .then(res => res.rows)
   .catch(err => console.error(err));
 }
@@ -94,8 +94,9 @@ exports.getAllReservations = getAllReservations;
 const getAllProperties = function(options, limit = 10) {
   const queryString = `SELECT *
     FROM properties
-    LIMIT $1`;
-  return pool.query(queryString, [limit])
+    JOIN property_reviews AS revs ON properties.id = revs.property_id`;
+  const queryParams = [];
+  return pool.query(queryString, queryParams)
   .then(res => res.rows)
   .catch(err => console.error(err));
 }
