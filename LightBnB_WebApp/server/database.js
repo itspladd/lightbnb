@@ -38,7 +38,7 @@ const getUserWithId = function(id) {
     WHERE id = $1`;
   const values = [id]; 
   return pool.query(queryString, values)
-  .then(res => res.rows)
+  .then(res => res.rows[0])
   .catch(err => console.error(err));
 }
 exports.getUserWithId = getUserWithId;
