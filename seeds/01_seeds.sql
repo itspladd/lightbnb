@@ -8,7 +8,7 @@ VALUES ('Trapezius Crushpecs' , 'bloodwar@hemoclobber.clan', '$2a$10$FB/BOAVhpuL
 INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, cover_photo_url, country, street, city, province, post_code)
 VALUES (1, 'Heartflex Hollow', 'description', 'https://i.imgur.com/CyeZOiQ.jpg', 'https://i.imgur.com/CyeZOiQ.jpg', 'Canada', '342 Blood Drive', 'Hemoclobber Enclave', 'Ontario', '123'),
 (2, 'Briarthorn Abode', 'description', 'https://i.imgur.com/a4rYMym.png', 'https://i.imgur.com/a4rYMym.png', 'Canada', '10 Vinesprawl Way', 'The Petalsworn Garden-Mausoleum', 'Ontario', '321'),
-(3, 'Castle Skullex', 'description', 'https://static.wikia.nocookie.net/heman/images/b/b4/Fright_Zone_%28She-Ra_and_the_Princesses_of_Power%29_from_Light_Hope_%28episode%29_001.jpg/revision/latest/top-crop/width/220/height/220?cb=20181126055818', 'https://static.wikia.nocookie.net/heman/images/b/b4/Fright_Zone_%28She-Ra_and_the_Princesses_of_Power%29_from_Light_Hope_%28episode%29_001.jpg/revision/latest/top-crop/width/220/height/220?cb=20181126055818', 'Canada', '1 Osteo Avenue', 'Fracture', 'Montreal', '455'),
+(3, 'Castle Skullex', 'description', 'https://i.imgur.com/jZ3DUgf.png', 'https://i.imgur.com/jZ3DUgf.png', 'Canada', '1 Osteo Avenue', 'Fracture', 'Montreal', '455'),
 (5, 'Marrowveinia', 'description', 'https://starfinderwiki.com/mediawikisf/images/thumb/a/ac/Eox.jpg/250px-Eox.jpg', 'https://starfinderwiki.com/mediawikisf/images/thumb/a/ac/Eox.jpg/800px-Eox.jpg', 'Marrowveinia', '0 Marrowveinia Promenade', 'Marrowveinia City', 'Crania', '111');
 
 INSERT INTO reservations (guest_id, property_id, start_date, end_date)
