@@ -22,7 +22,12 @@ const getUserWithEmail = function(email) {
   WHERE email = $1`;
   const queryParams = [email.toLowerCase()]; 
   return pool.query(queryString, queryParams)
-  .then(res => res.rows[0]) // res.rows is an array, but login functions expect a single object.
+  .then(res => {
+    if (res.rows.length === 0) {
+      return null;
+    }
+    return res.rows[0]; // res.rows is an array, but login functions expect a single object.
+  }) 
   .catch(err => console.error(err));
 }
 exports.getUserWithEmail = getUserWithEmail;
