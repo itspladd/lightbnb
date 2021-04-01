@@ -1,13 +1,7 @@
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
 
-const { Pool } = require('pg');
-const pool = new Pool({
-  user: 'vagrant',
-  password: '123',
-  database: 'lightbnb',
-  host: 'localhost'
-});
+const db = require('./db');
 
 /// Users
 
@@ -21,12 +15,12 @@ const getUserWithEmail = function(email) {
   FROM users
   WHERE email = $1`;
   const queryParams = [email.toLowerCase()]; 
-  return pool.query(queryString, queryParams)
-  .then(res => {
-    if (res.rows.length === 0) {
+  return db.query(queryString, queryParams)
+  .then(rows => {
+    if (rows.length === 0) {
       return null;
     }
-    return res.rows[0]; // res.rows is an array, but login functions expect a single object.
+    return rows[0]; // res.rows is an array, but login functions expect a single object.
   }) 
   .catch(err => console.error(err));
 }
@@ -42,8 +36,8 @@ const getUserWithId = function(id) {
     FROM users
     WHERE id = $1`;
   const queryParams = [id]; 
-  return pool.query(queryString, queryParams)
-  .then(res => res.rows[0])
+  return db.query(queryString, queryParams)
+  .then(rows => rows[0])
   .catch(err => console.error(err));
 }
 exports.getUserWithId = getUserWithId;
@@ -59,8 +53,8 @@ const addUser =  function(user) {
   VALUES ($1, $2, $3)
   RETURNING *`;
   const queryParams = [user.name, user.email, user.password];
-  return pool.query(queryString, queryParams)
-  .then(res => res.rows[0])
+  return db.query(queryString, queryParams)
+  .then(rows => rows[0])
   .catch(err => console.error(err));
 }
 exports.addUser = addUser;
@@ -82,8 +76,7 @@ const getAllReservations = function(guest_id, limit = 10) {
   ORDER BY res.start_date DESC
   LIMIT $2;`
   const queryParams = [guest_id, limit]
-  return pool.query(queryString, queryParams)
-  .then(res => res.rows)
+  return db.query(queryString, queryParams)
   .catch(err => console.error(err));
 }
 exports.getAllReservations = getAllReservations;
@@ -157,8 +150,7 @@ const getAllProperties = function(options, limit = 10) {
   queryString += `ORDER BY cost_per_night
   LIMIT $${queryParams.length};
   `;
-  return pool.query(queryString, queryParams)
-  .then(res => res.rows)
+  return db.query(queryString, queryParams)
   .catch(err => console.error(err));
 }
 exports.getAllProperties = getAllProperties;
@@ -190,8 +182,7 @@ const addProperty = function(property) {
   const queryString = `INSERT INTO properties (${propertiesString})
   VALUES (${valuesString})
   RETURNING *`;
-  return pool.query(queryString, queryParams)
-  .then(res => res.rows)
+  return db.query(queryString, queryParams)
   .catch(err => console.error(err));
 }
 exports.addProperty = addProperty;
