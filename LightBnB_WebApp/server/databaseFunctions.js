@@ -186,3 +186,35 @@ const addProperty = function(property) {
   .catch(err => console.error(err));
 }
 exports.addProperty = addProperty;
+
+/**
+ * Add a reservation to the database
+ * @param {{}} reservation An object containing all of the reservation details.
+ * @return {Promise<{}>} A promise to the reservation.
+ */
+const addReservation = function(reservation) {
+  const reservationKeysArray = Object.keys(reservation);
+  const numValues = reservationKeysArray.length;
+  
+  // Since the values are what we want in our query parameters, we can just get the values
+  const queryParams = Object.values(reservation);
+
+  // Turn the keys array into a string of column names
+  const propertiesString = reservationKeysArray.join(', ');
+
+  // Make a $1, $2, etc string from the number of values
+  let valuesString = '';
+  for(let i = 1; i <= numValues; i++) {
+    valuesString += i !== 1 ? ', ' : ''; 
+    valuesString += `$${i}`;
+  
+  }
+  const queryString = `INSERT INTO reservations (${propertiesString})
+  VALUES (${valuesString})
+  RETURNING *`;
+  console.log(queryString);
+  console.log(queryParams);
+  return db.query(queryString, queryParams)
+  .catch(err => console.error(err));
+};
+exports.addReservation = addReservation;

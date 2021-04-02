@@ -36,7 +36,10 @@ module.exports = function(router, database) {
   });
 
   router.post('/reservations', (req,res) => {
-    console.log('query:',req.body);
+    const userId = req.session.userId;
+    database.addReservation({...req.body, guest_id: userId})
+    .then(reservation => res.send(reservation))
+    .catch(err => console.error(err));
   });
 
   return router;
