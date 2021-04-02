@@ -212,8 +212,6 @@ const addReservation = function(reservation) {
   const queryString = `INSERT INTO reservations (${propertiesString})
   VALUES (${valuesString})
   RETURNING *`;
-  console.log(queryString);
-  console.log(queryParams);
   return db.query(queryString, queryParams)
   .catch(err => console.error(err));
 };

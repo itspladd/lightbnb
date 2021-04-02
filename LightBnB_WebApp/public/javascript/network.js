@@ -54,7 +54,6 @@ const submitProperty = function(data) {
 }
 
 const reserveProperty = function(data) {
-  console.log(data);
   return $.ajax({
     method: "POST",
     url: "/api/reservations",
