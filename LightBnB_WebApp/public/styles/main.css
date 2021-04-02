@@ -8,23 +8,28 @@
   margin: 20px 0;
   width: 100%;
   max-width: 600px;
-  height: 200px;
   border: 1px solid black;
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch; }
   .property-listing__title {
     font-size: 1.0rem; }
+  .property-listing__details {
+    flex-basis: 40%;
+  }
   .property-listing__preview-image {
     overflow: hidden;
-    max-width: 50%; }
+    flex-basis: 40%; }
     .property-listing__preview-image img {
       min-width: 100%;
-      height: 100%;
+      max-height: 200px;
       padding: 0; }
+  .property-listing__reserve-picker {
+    height: 2em;
+  }
 
 @media screen and (max-width: 400px) {
   .property-listing {

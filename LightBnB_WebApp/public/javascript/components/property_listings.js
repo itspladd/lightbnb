@@ -24,6 +24,16 @@ $(() => {
       const listing = propertyListing.createListing(property, isReservation);
       addListing(listing);
     }
+
+    
+    $propertyListings.submit(function(event) {
+      event.preventDefault();
+      const $form = $(event.target);
+      const data = $form.serialize();
+      reserveProperty(data)
+      .then(console.log('TODO show reservations')) //spoof a click on the reservations button
+      .catch(err => console.error(err));
+    });
   }
   window.propertyListings.addProperties = addProperties;
 
