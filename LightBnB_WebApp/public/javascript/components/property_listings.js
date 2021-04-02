@@ -31,7 +31,7 @@ $(() => {
       const $form = $(event.target);
       const data = $form.serialize();
       reserveProperty(data)
-      .then(console.log('TODO show reservations')) //spoof a click on the reservations button
+      .then($('header .my_reservations_button').click()) //spoof a click on the reservations button
       .catch(err => console.error(err));
     });
   }
